@@ -8,8 +8,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-LABEL_COLUMN = None
-SCORE_COLUMN = None
+global LABEL_COLUMN = None
+global SCORE_COLUMN = None
+global JOB = {}
 
 #
 # This is the model initialization function.  This function will be called once when the model is initially loaded.  At
@@ -23,25 +24,17 @@ SCORE_COLUMN = None
 # modelop.init
 def init(init_param):
 
-    global LABEL_COLUMN
-    global SCORE_COLUMN
-
     job_json = init_param
-    job = json.loads(init_param["rawJson"])
+    JOB = json.loads(init_param["rawJson"])
+
+
 
     if job_json is not None:
         logger.info(
             "Parameter 'job_json' is present and will be used to extract "
             "'label_column' and 'score_column'."
         )
-        ##### Retrieving jobParameters
-        try:
-            print('Attempting to extract the KPI threshold file from jobParameters.')
-            additional_assets = job.get('additionalAssets', [])
-            print(f'Extracted Asset Information: {additional_assets[0]}')
-        except Exception as e:
-            print('Unable to extract the additional assets from the job json.')
-            print(e)
+
         input_schema_definition = infer.extract_input_schema(job_json)
         monitoring_parameters = infer.set_monitoring_parameters(
             schema_json=input_schema_definition, check_schema=True
@@ -79,10 +72,35 @@ def init(init_param):
 
 # modelop.metrics
 def metrics(data: pd.DataFrame):
+
+    ##### Retrieving metrics from KPI file
+    try:
+        print('Attempting to extract the KPI threshold file from jobParameters.')
+        additional_assets = JOB.get('additionalAssets', [])
+        print(f'Extracted Asset Information: {additional_assets[0]}')
+        currentMetric = getCurrentDayKPI(additional_assets)
+        print(currentMetric)
+    except Exception as e:
+        print('Unable to extract the kpi from the jobs.')
+        print(e)
+    
     df2 = len(data[data[LABEL_COLUMN]==1])
-    yield df2
+    yield {"currentDay_KPI" : currentMetric, "currentDay_ConversionRate" : df2}
 
 
+def getCurrentDayKPI(jobAsset):
+    #fileName = jobAsset.get('filename')
+    fileName = './kpiValues.csv'
+    kpiDF = pd.read_csv(fileName)
+
+    resultRecord = kpiDF[(pd.to_datetime(kpiDF['kpiDate']) == today.strftime("%Y-%m-%d"))]
+    if resultRecord is not None:
+        print("currentDayKPI is :", resultRecord.iloc[0]['kpi'])
+    else:
+        print("no matching dates")
+    
+    return resultRecord
+    
 #
 # This main method is utilized to simulate what the engine will do when calling the above metrics function.  It takes
 # the json formatted data, and converts it to a pandas dataframe, then passes this into the metrics function for
@@ -94,11 +112,6 @@ def main():
     init_param = {'rawJson': raw_json}
     init(init_param)
 
-#     data_dict = []
-#     with open('df_sample_scored.json','r') as f:
-#         for line in f:
-#             data_dict.append(json.loads(line))
-#     df = pd.DataFrame.from_dict([data_dict])
     df = pd.read_json('df_sample_scored.json', lines=True)
     print(next(metrics(df)))
 
