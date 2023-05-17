@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="Definitions_0wb2acp" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.3.0">
+  <decision id="Decision_0q87m1a" name="Model Test Comparator">
+    <decisionTable id="decisionTable_1">
+      <input id="InputClause_1td5bzn" label="currentDay_ActualRate" biodi:width="267" camunda:inputVariable="currentDay_ActualRate">
+        <inputExpression id="LiteralExpression_0thcre4" typeRef="double" expressionLanguage="juel">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="output_1" label="passes" name="passes" typeRef="boolean" biodi:width="150" />
+      <output id="OutputClause_05h1co6" label="reason" name="reason" typeRef="string" biodi:width="193" />
+      <output id="OutputClause_1ids7f5" name="category" typeRef="string" biodi:width="150" />
+      <rule id="DecisionRule_1jhzhxa">
+        <inputEntry id="UnaryTests_190evjk" expressionLanguage="juel">
+          <text>${currentDay_ActualRate &lt; currentDay_Threshold}</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_03mgpyq">
+          <text>false</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_1pws6rq">
+          <text>"Actual production conversion rate is below today's KPI threshold"</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0925z4o">
+          <text>"Performance"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_1ut5uvy">
+      <dmndi:DMNShape id="DMNShape_0dheq6y" dmnElementRef="Decision_0q87m1a">
+        <dc:Bounds height="80" width="180" x="150" y="150" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
