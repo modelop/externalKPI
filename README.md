@@ -33,7 +33,7 @@ This custom monitor provides an example of pulling in the thresholds for analysi
 7. On the Asset tab:
     a. In the "Input Assets" section, select the Production (Sample) data for your business model
     b. In the "Additional Assets" section, upload the CSV "KPI threshold" file
-8. On the "Thresholds" tab, select the "External_KPI.dmn" file that is in this repository
+8. On the "Thresholds" tab, select the "Performance_Classifier_External_Thresholds.dmn" file that is in this repository
 9. Click next, next, and then save.
 10. Once saved, click the "Play" button to run the monitor. 
 11. You should see the test results once the job complete. 
