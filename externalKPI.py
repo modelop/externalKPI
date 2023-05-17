@@ -40,7 +40,7 @@ def init(init_param):
             additional_assets = job.get('additionalAssets', [])
             print(f'Extracted Asset Information: {additional_assets[0]}')
         except Exception as e:
-            print('Unable to extract the BUCKET_COLUMN from jobParameters.')
+            print('Unable to extract the additional assets from the job json.')
             print(e)
         input_schema_definition = infer.extract_input_schema(job_json)
         monitoring_parameters = infer.set_monitoring_parameters(
