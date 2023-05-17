@@ -35,6 +35,8 @@ This custom monitor provides an example of pulling in the thresholds for analysi
     b. In the "Additional Assets" section, upload the CSV "KPI threshold" file
 8. On the "Thresholds" tab, select the "Performance_Classifier_External_Thresholds.dmn" file that is in this repository
 9. Click next, next, and then save.
-10. Once saved, click the "Play" button to run the monitor. 
-11. You should see the test results once the job complete. 
-12. Clicking on resulting "Model Test Results" will take you to the Test Results page, which should have a Notification of whether the test passed or not.
+
+**Run the Monitor:**
+1. Once saved, click the "Play" button to run the monitor. 
+2. You should see the test results once the job complete. 
+3. Clicking on resulting "Model Test Results" will take you to the Test Results page, which should have a Notification of whether the test passed or not.
