@@ -35,7 +35,7 @@ def init(init_param):
 
     #Get today's date
     #TODAY = datetime.datetime.now().strftime("%d-%b-%y")
-    TODAY = "08-Jul-2022"
+    TODAY = "08-Jul-22"
 
     #.strftime("%d-%b-%y")
     print("Beginning processing for today. Date= ", TODAY)
