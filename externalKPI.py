@@ -92,7 +92,7 @@ def metrics(data: pd.DataFrame):
         
         #Assume that the first asset in the additionalAssets section is the config file. 
         #Grab the filename, which will be used to read the values in the getCurrentDayKPI function
-        configFileName = "./" + additional_assets[0]['name']
+        configFileName = "./" + additional_assets[0]['filename']
         print(f'Extracted KPI File Name: {configFileName}')
 
         #Call the getCurrentDayKPI function, passing in the config file name from the Job
