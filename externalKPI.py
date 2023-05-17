@@ -99,7 +99,7 @@ def metrics(data: pd.DataFrame):
 
         #Call the getCurrentDayKPI function, passing in the config file name from the Job
         #Return the current day's metric
-        currentMetric = None
+        currentMetric = -99
         currentMetric = getCurrentDayKPI(configFileName)
         print("CurrentDayKPI is :",currentMetric)
         
@@ -130,7 +130,7 @@ def getCurrentDayKPI(configFileName):
         #In case there are more than one KPI records returned, take the average of all of them
         kpiThreshold = resultRecord['Modeled_Policy_Renewal'].mean()
     else:
-        kpiThreshold = "None"
+        kpiThreshold = -99
         print("no matching dates")
     
     return kpiThreshold
