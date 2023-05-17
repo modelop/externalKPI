@@ -35,7 +35,7 @@ def init(init_param):
 
     #Get today's date
     TODAY = datetime.datetime.now().strftime("%d-%b-%y")
-    print(TODAY)
+
     #.strftime("%d-%b-%y")
     print("Beginnging processing for today. Date= ", TODAY)
 
@@ -109,7 +109,7 @@ def metrics(data: pd.DataFrame):
     
     
     #Filter the data to today's data only
-    todayDataDF = data[(pd.to_datetime(data['present_employment_since']) == TODAY)]
+    todayDataDF = data[(data['present_employment_since'] == TODAY)]
     print("Number of Production records for today: ", len(todayDataDF))
     
     #Calculate the conversion rate for the day
@@ -124,7 +124,7 @@ def getCurrentDayKPI(configFileName):
     kpiDF = pd.read_csv(configFileName)
 
     #Find the KPI thresholds for today's date
-    resultRecord = kpiDF[(pd.to_datetime(kpiDF['POLEFFDATE_M']) == TODAY)]
+    resultRecord = kpiDF[(kpiDF['POLEFFDATE_M'] == TODAY)]
 
     if resultRecord is not None:
         #In case there are more than one KPI records returned, take the average of all of them
