@@ -1,0 +1,9 @@
+{
+    "tags": [],
+    "name": "External KPI Performance",
+    "description": "Monitor to calculate performance based on actuals, pulling in external KPIs for threshold evaluation",
+    "modelCategory": "MODEL_MONITORING_MODEL",
+    "defaultAssociationRole": "PERFORMANCE_MODEL",
+    "frequentlyUsed": false,
+    "custom" : {}
+}
