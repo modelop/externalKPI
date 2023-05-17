@@ -122,10 +122,10 @@ def getCurrentDayKPI(configFileName):
 
     #Read the config file, assuming that it is a CSV
     kpiDF = pd.read_csv(configFileName)
-
+    print("kpiDF is: ",kpiDF)
     #Find the KPI thresholds for today's date
     resultRecord = kpiDF[(kpiDF['POLEFFDATE_M'] == TODAY)]
-    print(resultRecord)
+    print("resultRecord is: ",resultRecord)
 
     if resultRecord is not None:
         #In case there are more than one KPI records returned, take the average of all of them
