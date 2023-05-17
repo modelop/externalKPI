@@ -27,6 +27,7 @@ def init(init_param):
     global SCORE_COLUMN
 
     job_json = init_param
+    job = json.loads(init_param["rawJson"])
 
     if job_json is not None:
         logger.info(
@@ -36,15 +37,8 @@ def init(init_param):
         ##### Retrieving jobParameters
         try:
             print('Attempting to extract the KPI threshold file from jobParameters.')
-            associatedModels = json.loads(job_json['rawJson'])['referenceModel']['associatedModels']
-            associatedAssets = associatedModels[3]['associationAssets']
-            print(f'Extracted BUCKET_COLUMN: {associatedAssets[0]}')
-            print('*******')
-            print(f'Extracted BUCKET_COLUMN: {associatedAssets[1]}')
-            print('*******')
-            print(f'Extracted BUCKET_COLUMN: {associatedAssets[2]}')
-            print('*******')
-            print(f'Extracted BUCKET_COLUMN: {len(associatedAssets)}')
+            additional_assets = job.get('additionalAssets', [])
+            print(f'Extracted Asset Information: {additional_assets[0]}')
         except Exception as e:
             print('Unable to extract the BUCKET_COLUMN from jobParameters.')
             print(e)
