@@ -110,6 +110,7 @@ def metrics(data: pd.DataFrame):
     
     
     #Filter the data to today's data only
+    print(data.head(10))
     todayDataDF = data[(data['POLEFFDATE_M'] == TODAY)]
     print("Number of Production records for today: ", len(todayDataDF))
     
@@ -123,7 +124,7 @@ def getCurrentDayKPI(configFileName):
 
     #Read the config file, assuming that it is a CSV
     kpiDF = pd.read_csv(configFileName)
-
+    print(kpiDF.head(10))
     #Find the KPI thresholds for today's date
     resultRecord = kpiDF[(kpiDF['POLEFFDATE_M'] == TODAY)]
     print("KPI records extracted: ",resultRecord)
