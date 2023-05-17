@@ -125,6 +125,7 @@ def getCurrentDayKPI(configFileName):
 
     #Find the KPI thresholds for today's date
     resultRecord = kpiDF[(kpiDF['POLEFFDATE_M'] == TODAY)]
+    print(resultRecord)
 
     if resultRecord is not None:
         #In case there are more than one KPI records returned, take the average of all of them
