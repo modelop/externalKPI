@@ -37,7 +37,7 @@ def init(init_param):
     TODAY = datetime.datetime.now().strftime("%d-%b-%y")
 
     #.strftime("%d-%b-%y")
-    print("Beginnging processing for today. Date= ", TODAY)
+    print("Beginning processing for today. Date= ", TODAY)
 
     #Obtain the name of the label (i.e. "actuals") column and score (i.e. predictions) columns from the schema. 
     #This will be used by the metrics function to filter the input data to the actuals/label and score data only
