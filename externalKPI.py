@@ -109,7 +109,7 @@ def metrics(data: pd.DataFrame):
     
     
     #Filter the data to today's data only
-    todayDataDF = data[(data['present_employment_since'] == TODAY)]
+    todayDataDF = data[(data['POLEFFDATE_M'] == TODAY)]
     print("Number of Production records for today: ", len(todayDataDF))
     
     #Calculate the conversion rate for the day
