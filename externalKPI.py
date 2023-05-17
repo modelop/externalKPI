@@ -130,7 +130,7 @@ def getCurrentDayKPI(configFileName):
         #In case there are more than one KPI records returned, take the average of all of them
         kpiThreshold = resultRecord['Modeled_Policy_Renewal'].mean()
     else:
-        kpiThreshold = None
+        kpiThreshold = "None"
         print("no matching dates")
     
     return kpiThreshold
