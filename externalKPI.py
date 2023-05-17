@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+import datetime
 from datetime import date
 import pandas as pd
 from pathlib import Path
@@ -34,7 +34,7 @@ def init(init_param):
     JOB = json.loads(init_param["rawJson"])
 
     #Get today's date
-    TODAY = date.today()
+    TODAY = datetime.datetime.now()
     print("Beginnging processing for today. Date= ", TODAY.strftime("%d-%b-%y"))
 
     #Obtain the name of the label (i.e. "actuals") column and score (i.e. predictions) columns from the schema. 
