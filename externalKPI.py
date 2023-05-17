@@ -34,7 +34,8 @@ def init(init_param):
     JOB = json.loads(init_param["rawJson"])
 
     #Get today's date
-    TODAY = datetime.datetime.now().strftime("%d-%b-%y")
+    #TODAY = datetime.datetime.now().strftime("%d-%b-%y")
+    TODAY = "8-Jul-2022"
 
     #.strftime("%d-%b-%y")
     print("Beginning processing for today. Date= ", TODAY)
