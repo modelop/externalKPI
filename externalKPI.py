@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from datetime import date
 import pandas as pd
 from pathlib import Path
 import modelop.schema.infer as infer
@@ -8,9 +9,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-global LABEL_COLUMN = None
-global SCORE_COLUMN = None
-global JOB = {}
+LABEL_COLUMN = None
+SCORE_COLUMN = None
+JOB = {}
 
 #
 # This is the model initialization function.  This function will be called once when the model is initially loaded.  At
@@ -24,11 +25,20 @@ global JOB = {}
 # modelop.init
 def init(init_param):
 
+    global LABEL_COLUMN
+    global SCORE_COLUMN
+    global JOB
+    global TODAY
+    
     job_json = init_param
     JOB = json.loads(init_param["rawJson"])
 
+    #Get today's date
+    TODAY = date.today()
+    print("Beginnging processing for today. Date= ", TODAY.strftime("%d-%b-%y"))
 
-
+    #Obtain the name of the label (i.e. "actuals") column and score (i.e. predictions) columns from the schema. 
+    #This will be used by the metrics function to filter the input data to the actuals/label and score data only
     if job_json is not None:
         logger.info(
             "Parameter 'job_json' is present and will be used to extract "
@@ -73,37 +83,59 @@ def init(init_param):
 # modelop.metrics
 def metrics(data: pd.DataFrame):
 
-    ##### Retrieving metrics from KPI file
+    ##### Retrieving threshold for the day from KPI file
     try:
-        print('Attempting to extract the KPI threshold file from jobParameters.')
+        print('Attempting to extract the KPI threshold file information from the Job details.')
+        
+        # Look for the config file in the additionalAssets section of the Job object
         additional_assets = JOB.get('additionalAssets', [])
-        print(f'Extracted Asset Information: {additional_assets[0]}')
-        currentMetric = getCurrentDayKPI(additional_assets)
-        print(currentMetric)
+        
+        #Assume that the first asset in the additionalAssets section is the config file. 
+        #Grab the filename, which will be used to read the values in the getCurrentDayKPI function
+        configFileName = "./" + additional_assets[0]['name']
+        print(f'Extracted KPI File Name: {configFileName}')
+
+        #Call the getCurrentDayKPI function, passing in the config file name from the Job
+        #Return the current day's metric
+        currentMetric = None
+        currentMetric = getCurrentDayKPI(configFileName)
+        print("CurrentDayKPI is :",currentMetric)
+        
     except Exception as e:
-        print('Unable to extract the kpi from the jobs.')
+        print('Unable to extract the threshold from the job information.')
         print(e)
     
-    df2 = len(data[data[LABEL_COLUMN]==1])
-    yield {"currentDay_KPI" : currentMetric, "currentDay_ConversionRate" : df2}
+    
+    #Filter the data to today's data only
+    todayDataDF = data[(pd.to_datetime(data['present_employment_since']) == TODAY.strftime("%d-%b-%y"))]
+    print("Number of Production records for today: ", len(todayDataDF))
+    
+    #Calculate the conversion rate for the day
+    conversationRate = len(todayDataDF[todayDataDF[LABEL_COLUMN]==1])/len(todayDataDF)
+    
+    yield {"currentDay_KPI" : currentMetric, "currentDay_ConversionRate" : conversationRate}
 
 
-def getCurrentDayKPI(jobAsset):
-    #fileName = jobAsset.get('filename')
-    fileName = './kpiValues.csv'
-    kpiDF = pd.read_csv(fileName)
+def getCurrentDayKPI(configFileName):
 
-    resultRecord = kpiDF[(pd.to_datetime(kpiDF['kpiDate']) == today.strftime("%Y-%m-%d"))]
+    #Read the config file, assuming that it is a CSV
+    kpiDF = pd.read_csv(configFileName)
+
+    #Find the KPI thresholds for today's date
+    resultRecord = kpiDF[(pd.to_datetime(kpiDF['POLEFFDATE_M']) == TODAY.strftime("%d-%b-%y"))]
+
     if resultRecord is not None:
-        print("currentDayKPI is :", resultRecord.iloc[0]['kpi'])
+        #In case there are more than one KPI records returned, take the average of all of them
+        kpiThreshold = resultRecord['Modeled_Policy_Renewal'].mean()
     else:
+        kpiThreshold = None
         print("no matching dates")
     
-    return resultRecord
+    return kpiThreshold
     
 #
 # This main method is utilized to simulate what the engine will do when calling the above metrics function.  It takes
-# the json formatted data, and converts it to a pandas dataframe, then passes this into the metrics function for
+# the json/csv formatted data, and converts it to a pandas dataframe, then passes this into the metrics function for
 # processing.  This is a good way to develop your models to be conformant with the engine in that you can run this
 # locally first and ensure the python is behaving correctly before deploying on a ModelOp engine.
 #
