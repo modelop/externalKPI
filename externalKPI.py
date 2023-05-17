@@ -127,12 +127,12 @@ def getCurrentDayKPI(configFileName):
     resultRecord = kpiDF[(kpiDF['POLEFFDATE_M'] == TODAY)]
     print("resultRecord is: ",resultRecord)
 
-    if resultRecord is not None:
-        #In case there are more than one KPI records returned, take the average of all of them
-        kpiThreshold = resultRecord['Modeled_Policy_Renewal'].mean()
-    else:
+    if resultRecord.empty:
         kpiThreshold = -99
         print("no matching dates")
+    else:
+        #In case there are more than one KPI records returned, take the average of all of them
+        kpiThreshold = resultRecord['Modeled_Policy_Renewal'].mean()
     
     return kpiThreshold
     
