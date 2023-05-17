@@ -125,7 +125,7 @@ def getCurrentDayKPI(configFileName):
 
     #Find the KPI thresholds for today's date
     resultRecord = kpiDF[(kpiDF['POLEFFDATE_M'] == TODAY)]
-    print("resultRecord is: ",resultRecord)
+    print("KPI records extracted: ",resultRecord)
 
     if resultRecord.empty:
         kpiThreshold = -99
