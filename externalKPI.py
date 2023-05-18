@@ -27,6 +27,7 @@ def init(init_param):
 
     global LABEL_COLUMN
     global SCORE_COLUMN
+    global DATE_COLUMN
     global JOB
     global TODAY
     
@@ -36,9 +37,10 @@ def init(init_param):
     #Get today's date
     #TODAY = datetime.datetime.now().strftime("%d-%b-%y")
     TODAY = "08-Jul-22"
+    DATE_COLUMN = "POLEFFDATE_M"
 
     #.strftime("%d-%b-%y")
-    print("Beginning processing for today. Date= ", TODAY)
+    print("Beginnging processing for today. Date= ", TODAY)
 
     #Obtain the name of the label (i.e. "actuals") column and score (i.e. predictions) columns from the schema. 
     #This will be used by the metrics function to filter the input data to the actuals/label and score data only
@@ -110,8 +112,25 @@ def metrics(data: pd.DataFrame):
     
     
     #Filter the data to today's data only
-    print(data.head(10))
-    todayDataDF = data[(data['POLEFFDATE_M'] == TODAY)]
+    print("Sample of datetime values from the input data set: ", data[DATE_COLUMN].head(3))
+    
+    todayDataDF = data[(data[DATE_COLUMN] == TODAY)]
+
+    #try a different format
+    if todayDataDF.empty:
+        todayDataDF = data[(data[DATE_COLUMN] == "2022-07-08")]
+
+    #try a different format
+    if todayDataDF.empty:
+        todayDataDF = data[(data[DATE_COLUMN] == "8-Jul-22")]
+
+    if todayDataDF.empty:
+        print("Can't find a relevant data format")
+        print("Example records for this field are: ")
+        print("datetime records", data[DATE_COLUMN].head(10))
+    else:
+        print("Sample of datetime values from the resulting data: ", todayDataDF[DATE_COLUMN].head(3))
+    
     print("Number of Production records for today: ", len(todayDataDF))
     
     #Calculate the conversion rate for the day
@@ -124,14 +143,14 @@ def getCurrentDayKPI(configFileName):
 
     #Read the config file, assuming that it is a CSV
     kpiDF = pd.read_csv(configFileName)
-    print(kpiDF.head(10))
+
     #Find the KPI thresholds for today's date
     resultRecord = kpiDF[(kpiDF['POLEFFDATE_M'] == TODAY)]
     print("KPI records extracted: ",resultRecord)
 
     if resultRecord.empty:
         kpiThreshold = -99
-        print("no matching dates")
+        print("No matching dates")
     else:
         #In case there are more than one KPI records returned, take the average of all of them
         kpiThreshold = resultRecord['Modeled_Policy_Renewal'].mean()
