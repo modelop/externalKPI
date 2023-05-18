@@ -111,9 +111,12 @@ def metrics(data: pd.DataFrame):
         print(e)
     
     
+    #-------CALCULATE CONVERSATION RATE FROM INPUT DATA------
+
+    conversationRate = -99
+    
     #Filter the data to today's data only
     print("Sample of datetime values from the input data set: ", data[DATE_COLUMN].head(3))
-    
     todayDataDF = data[(data[DATE_COLUMN] == TODAY)]
 
     #try a different format
@@ -125,16 +128,16 @@ def metrics(data: pd.DataFrame):
         todayDataDF = data[(data[DATE_COLUMN] == "8-Jul-22")]
 
     if todayDataDF.empty:
-        print("Can't find a relevant data format")
+        print("Can't find a relevant datetime format OR no matching input data for the datetime")
         print("Example records for this field are: ")
-        print("datetime records", data[DATE_COLUMN].head(10))
+        print("datetime records", data[DATE_COLUMN].head(3))
     else:
+        print("Number of Production records for today: ", len(todayDataDF))
         print("Sample of datetime values from the resulting data: ", todayDataDF[DATE_COLUMN].head(3))
-    
-    print("Number of Production records for today: ", len(todayDataDF))
-    
-    #Calculate the conversion rate for the day
-    conversationRate = len(todayDataDF[todayDataDF[LABEL_COLUMN]==1])/len(todayDataDF)
+        
+        #Calculate the conversion rate for the day
+        conversationRate = len(todayDataDF[todayDataDF[LABEL_COLUMN]==1])/len(todayDataDF)    
+
     
     yield {"currentDay_Threshold" : currentMetric, "currentDay_ActualRate" : conversationRate, "currentDay_TotalRecords": len(todayDataDF)}
 
